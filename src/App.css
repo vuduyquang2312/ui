@@ -1,38 +1,57 @@
-.App {
-  text-align: center;
+* {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Toàn bộ thanh trượt cho màn hình lớn hơn (desktop/tablet) */
+::-webkit-scrollbar {
+  width: 2px; /* Độ rộng của thanh cuộn */
+  height: 2px; /* Chiều cao của thanh cuộn ngang */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Phần background của thanh trượt */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Màu nền của thanh trượt đã đổi sang màu nhạt hơn */
+  border-radius: 10px; /* Bo tròn các góc của thanh trượt */
+}
+
+/* Phần di chuyển của thanh trượt */
+::-webkit-scrollbar-thumb {
+  background-color: #2c7a7b; /* Màu của phần thanh di chuyển đổi sang màu xanh đậm hơn */
+  border-radius: 10px; /* Bo tròn các góc của thanh di chuyển */
+  
+}
+
+/* Khi người dùng hover vào thanh trượt */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #285e61; /* Màu khi hover chuyển sang màu đậm hơn */
+}
+
+/* Tùy chỉnh thanh trượt cho màn hình di động */
+@media (max-width: 767px) {
+  /* Điều chỉnh độ rộng và chiều cao của thanh trượt trên mobile */
+  ::-webkit-scrollbar {
+    width: 2px; /* Thanh trượt nhỏ hơn */
+    height: 2px; /* Thanh ngang nhỏ hơn */
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  /* Phần background của thanh trượt */
+  ::-webkit-scrollbar-track {
+    background: #e2e8f0; /* Màu nền sáng hơn một chút */
+    border-radius: 5px; /* Góc bo ít hơn trên mobile */
   }
-  to {
-    transform: rotate(360deg);
+
+  /* Phần di chuyển của thanh trượt */
+  ::-webkit-scrollbar-thumb {
+    background-color: #319795; /* Màu phần thanh di chuyển đổi sang xanh đậm */
+    border-radius: 4px; /* Bo góc ít hơn trên mobile */
+    
+  }
+
+  /* Khi người dùng hover vào thanh trượt */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #2c7a7b; /* Màu khi hover trên mobile */
   }
 }
