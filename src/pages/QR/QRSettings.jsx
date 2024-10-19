@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IoCloseOutline } from "react-icons/io5";
+import { MayTinhDatCuoc, tinhToanSoTienDatCuoc } from './MayTinhDatCuoc';
 
 export default function QRSettings({
     selectedOption,
@@ -45,6 +46,7 @@ export default function QRSettings({
     useEffect(() => {
         if (localSelectedPurpose === "QR đặt cược") {
             setLocalSelectedOption("Có số tiền và nội dung");
+            setLocalSelectedTemplate("compact: QR kèm logo VietQR, Napas, ngân hàng");
         }
     }, [localSelectedPurpose]);
 
@@ -75,10 +77,17 @@ export default function QRSettings({
         setLocalSelectedPurpose(newPurpose);
         if (newPurpose === "QR đặt cược") {
             setLocalSelectedOption("Có số tiền và nội dung");
+            setLocalSelectedTemplate("compact: QR kèm logo VietQR, Napas, ngân hàng");
         }
     };
 
     const handleInitialConfirm = () => {
+        localStorage.setItem('selectedOption', localSelectedOption);
+        localStorage.setItem('selectedTemplate', localSelectedTemplate);
+        
+        // Update parent component state
+        setSelectedOption(localSelectedOption);
+        setSelectedTemplate(localSelectedTemplate);
         if (localSelectedPurpose === "QR đặt cược") {
             setShowBettingForm(true);
         } else {
@@ -89,8 +98,26 @@ export default function QRSettings({
             });
         }
     };
-
+    const [ketQuaTinhToan, setKetQuaTinhToan] = useState(null);
     const handleBettingConfirm = () => {
+        console.log("Dữ liệu Biểu mẫu Đặt cược:", bettingFormData);
+        
+        const tongSoTien = parseInt(bettingFormData.soTienVon.replace(/[^\d]/g, ''), 10);
+        const soTay = parseInt(bettingFormData.soTayChiaVon, 10) || 3;
+        const cacKhoanTienDatCuoc = tinhToanSoTienDatCuoc(tongSoTien, bettingFormData.phuongPhap, soTay);
+    
+        // Hiển thị kết quả tính toán
+        setKetQuaTinhToan(
+            <div className="mt-4 p-4 bg-gray-100 rounded-md">
+                <h3 className="font-bold mb-2">Kết quả tính toán số tiền đặt cược:</h3>
+                {cacKhoanTienDatCuoc.map((soTien, index) => (
+                    <p key={index}>
+                        Tay {index + 1}: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(soTien)}
+                    </p>
+                ))}
+            </div>
+        );
+    
         handleConfirm({
             localSelectedOption,
             localSelectedTemplate,
@@ -118,7 +145,7 @@ export default function QRSettings({
                             name="soTienVon"
                             className="block w-full mt-2 p-3 text-xs md:text-sm bg-white text-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                             value={bettingFormData.soTienVon}
-                            onChange={handleBettingFormChange}
+                            onChange={handleTienVonChange}
                         />
                     </div>
                     <div className='w-1/2 ml-4'>
@@ -208,7 +235,7 @@ export default function QRSettings({
                         />
                     </div>
                 </div>
-
+                
                 <div className="mb-6 flex">
                     <div className='w-1/3'>
                         <label className="block text-gray-500 mb-2 text-xs md:text-sm">Chốt lãi:</label>
@@ -241,7 +268,7 @@ export default function QRSettings({
                         />
                     </div>
                 </div>
-
+                {ketQuaTinhToan}
                 <button
                     className="mt-4 p-3 bg-[#34D399] text-white rounded-md w-full text-xs md:text-sm hover:bg-[#2BBF88] transition-all"
                     onClick={handleBettingConfirm}
@@ -286,6 +313,7 @@ export default function QRSettings({
                     className="block w-full mt-2 p-3 border border-gray-300 bg-white text-xs md:text-sm text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     value={localSelectedTemplate}
                     onChange={(e) => setLocalSelectedTemplate(e.target.value)}
+                    disabled={localSelectedPurpose === "QR đặt cược"}
                 >
                     <option value="compact2">compact2: Mã QR, các logo, thông tin chuyển khoản</option>
                     <option value="compact">compact: QR kèm logo VietQR, Napas, ngân hàng</option>
